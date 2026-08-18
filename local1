@@ -1,4 +1,42 @@
-temp
+------------------------------------------------------------------------
+ng generate pipe pipe-name
+--------------------formatpipefirstletteruppercase-----------------------
+import { Pipe, PipeTransform } from '@angular/core';
+
+@Pipe({
+  name: 'formatUppercase',
+})
+export class FormatUppercasePipe implements PipeTransform {
+ transform(value: string): string {
+    return value
+      .split(' ')
+      .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+      .join(' ');
+  }
+}
+----
+import { Component } from '@angular/core';
+import { FormsModule, NgModel } from '@angular/forms';
+import { FormatUppercasePipe } from '../format-uppercase-pipe';
+@Component({
+  selector: 'app-format-pipe',
+  imports: [FormsModule,FormatUppercasePipe],
+})
+export class FormatPipe {
+   name: string = '';
+}
+---
+<h2>Title Case Pipe</h2>
+
+<input 
+  type="text" 
+  [(ngModel)]="name" 
+  placeholder="Enter your name">
+
+<p>Original: {{ name }}</p>
+
+<p>Formatted: {{ name | formatUppercase }}</p>
+--------------------------------------------------------------------------
 ---------------------Interceptorts----------------------------------------
 import { HttpErrorResponse, HttpInterceptorFn } from "@angular/common/http";
 import { catchError, throwError } from "rxjs";
