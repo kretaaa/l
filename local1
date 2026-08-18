@@ -37,6 +37,60 @@ export class FormatPipe {
 
 <p>Formatted: {{ name | formatUppercase }}</p>
 --------------------------------------------------------------------------
+--------------------filterdepartmentpipe----------------------------------
+import { Pipe, PipeTransform } from '@angular/core';
+@Pipe({
+  name: 'filterDepartment',
+})
+export class FilterDepartPipe implements PipeTransform {
+    transform(employees: any[], department: string): any[] {
+    if (!department) {
+      return employees;
+    }
+    return employees.filter(employee =>
+      employee.department.toLowerCase().includes(department.toLowerCase())
+    );
+  }
+}
+-----
+import { FormsModule } from '@angular/forms';
+import { FilterDepartPipe } from '../filter-department-pipe';
+@Component({
+  selector: 'app-filter-department',
+  imports: [ FormsModule,NgFor,FilterDepartPipe],
+})
+export class FilterDepartmentPipe {  
+  department: string = '';
+  employees = [
+    { name: 'Natasha', department: 'IT' },
+    { name: 'Rahul', department: 'HR' },
+    { name: 'Amit', department: 'IT' },
+    { name: 'Priya', department: 'Finance' }
+  ];
+}
+-----
+<h2>Employee Filter</h2>
+<input 
+  type="text" 
+  [(ngModel)]="department" 
+  placeholder="Enter department">
+<br><br>
+<table border="1">
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Department</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let employee of employees | filterDepartment:department">
+      <td>{{ employee.name }}</td>
+      <td>{{ employee.department }}</td>
+    </tr>
+  </tbody>
+</table>
+--------------------------------------------------------------------------
+
 ---------------------Interceptorts----------------------------------------
 import { HttpErrorResponse, HttpInterceptorFn } from "@angular/common/http";
 import { catchError, throwError } from "rxjs";
