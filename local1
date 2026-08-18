@@ -1,5 +1,4 @@
-------------------------------------------------------------------------
-ng generate pipe pipe-name
+
 --------------------formatpipefirstletteruppercase-----------------------
 import { Pipe, PipeTransform } from '@angular/core';
 
