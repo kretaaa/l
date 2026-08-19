@@ -1,4 +1,93 @@
-------ng add @angular/material    --matpagination-sort-headers------------------------------
+--------singupreactiveform-----------------------------------------------------------------
+<form [formGroup]="signupForm" (ngSubmit)="submit()">
+  <!-- Username -->
+  <label>Username:</label>
+  <input type="text" formControlName="username">
+   @if (signupForm.get('username')?.touched &&
+       signupForm.get('username')?.invalid) {
+    @if (signupForm.get('username')?.hasError('required')) {
+      <p>Username is required</p>
+    }
+    @if (signupForm.get('username')?.hasError('minlength')) {
+      <p>Username must be at least 3 characters</p>
+    }
+    @if (signupForm.get('username')?.hasError('maxlength')) {
+      <p>Username cannot exceed 15 characters</p>
+    }
+  } 
+  <br>
+  <!-- Email -->
+  <label>Email:</label>
+  <input type="email" formControlName="email">
+  @if (signupForm.get('email')?.touched &&
+       signupForm.get('email')?.invalid) {
+    @if (signupForm.get('email')?.hasError('required')) {
+      <p>Email is required</p>
+    }
+    @if (signupForm.get('email')?.hasError('pattern')) {
+      <p>Enter a valid email</p>
+    }
+  }
+ <br>
+  <!-- Password -->
+  <label>Password:   </label>
+  <input type="password" formControlName="password">
+  @if (signupForm.get('password')?.touched &&
+       signupForm.get('password')?.invalid) {
+    @if (signupForm.get('password')?.hasError('required')) {
+      <p>Password is required</p>
+    }
+    @if (signupForm.get('password')?.hasError('minlength')) {
+      <p>Password must be at least 8 characters</p>
+    }
+    @if (signupForm.get('password')?.hasError('pattern')) {
+      <p>
+        Password must contain uppercase, lowercase, number
+        and special character
+      </p>
+    }
+  }
+ <br>
+  <button type="submit" [disabled]="signupForm.invalid">
+    Sign Up
+  </button>
+</form>
+------
+import { Component } from '@angular/core';
+import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+@Component({
+  selector: 'sign-up-form',
+  imports: [ReactiveFormsModule],
+  templateUrl: './sign-up-form.html',
+  styleUrl: './sign-up-form.css',
+})
+export class SignUpForm {
+   signupForm = new FormGroup({
+    username: new FormControl('', [
+      Validators.required,
+      Validators.minLength(3),
+      Validators.maxLength(15)
+    ]),
+    email: new FormControl('', [
+      Validators.required,
+      Validators.email,
+      Validators.pattern(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/)
+    ]),
+    password: new FormControl('', [
+      Validators.required,
+      Validators.minLength(8),
+      Validators.pattern(/^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&]).*$/)
+    ])
+
+  });
+  submit() {
+    if (this.signupForm.valid) {
+      console.log(this.signupForm.value);
+    }
+  }
+}
+-------------------------------------------------------------------------------------------
+-------------ng add @angular/material    --matpagination-sort-headers------------------------------
 import { Component, AfterViewInit, ViewChild } from '@angular/core';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
