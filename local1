@@ -1,3 +1,48 @@
+-----------------Material-dialog-using-MatDialog-----------------------------------------
+import { Component } from '@angular/core';
+import { MatDialogRef, MatDialogActions, MatDialogContent } from '@angular/material/dialog';
+
+@Component({
+  selector: 'app-dialog',
+  template: `
+    <h2 mat-dialog-title> Welcome</h2>
+
+    <mat-dialog-content>
+      This is a Material Dialog.
+    </mat-dialog-content>
+
+    <mat-dialog-actions>
+      <button mat-button (click)="close()">Close</button>
+    </mat-dialog-actions>
+  `,
+  imports: [MatDialogActions, MatDialogContent]
+})
+export class DialogComponent {
+
+  constructor(private dialogRef: MatDialogRef<DialogComponent>) {}
+  close() {
+    this.dialogRef.close();
+  }
+}
+--------
+import { Component } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
+import { DialogComponent } from '../dialog-component/dialog-component';
+@Component({
+  selector: 'accesspopup',
+  template: `
+    <button mat-raised-button (click)="openDialog()">
+      Open Dialog
+    </button>
+  `
+})
+export class accesspopup {
+  constructor(private dialog: MatDialog) {}
+  openDialog() {
+    this.dialog.open(DialogComponent);
+  }
+}
+------------------------------------------------------------------------------------------
 --------singupreactiveform-----------------------------------------------------------------
 <form [formGroup]="signupForm" (ngSubmit)="submit()">
   <!-- Username -->
