@@ -535,6 +535,102 @@ export class PracticeApp {
   showFirstLastButtons>
 </mat-paginator>
 -------------------------------------------------------------------------
+-------------implement pagination with search filtering together --------
+import { Component } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+
+@Component({
+  selector: 'practice-app',
+  standalone: true,
+  imports: [CommonModule, FormsModule],
+  templateUrl: 'practice-app.html'
+})
+export class PracticeApp {
+
+  users = [
+    { name: 'John', email: 'john@gmail.com' },
+    { name: 'Alice', email: 'alice@gmail.com' },
+    { name: 'Bob', email: 'bob@gmail.com' },
+    { name: 'David', email: 'david@gmail.com' },
+  
+  ];
+  searchText = '';
+  pageSize = 3;
+  currentPage = 1;
+
+  get filteredUsers() {
+    const search = this.searchText.toLowerCase();
+
+    return this.users.filter(user =>
+      user.name.toLowerCase().includes(search) ||
+      user.email.toLowerCase().includes(search)
+    );
+  }
+
+  get paginatedUsers() {
+    const startIndex = (this.currentPage - 1) * this.pageSize;
+    const endIndex = startIndex + this.pageSize;
+
+    return this.filteredUsers.slice(startIndex, endIndex);
+  }
+
+  get totalPages() {
+    return Math.ceil(this.filteredUsers.length / this.pageSize);
+  }
+
+  searchUser() {
+    this.currentPage = 1;
+  }
+
+  nextPage() {
+    if (this.currentPage < this.totalPages) {
+      this.currentPage++;
+    }
+  }
+
+  previousPage() {
+    if (this.currentPage > 1) {
+      this.currentPage--;
+    }
+  }
+}
+-------
+<h2>User List</h2>
+
+<input
+  type="text"
+  placeholder="Search user..."
+  [(ngModel)]="searchText"
+  (input)="searchUser()"
+/>
+
+<br><br>
+<table border="1" cellpadding="10">
+  <tr>
+    <th>Name</th>
+    <th>Email</th>
+  </tr>
+  <tr *ngFor="let user of paginatedUsers">
+    <td>{{ user.name }}</td>
+    <td>{{ user.email }}</td>
+  </tr>
+</table>
+<br>
+<button
+  (click)="previousPage()"
+  [disabled]="currentPage === 1">
+  Previous
+</button>
+<span>
+  Page {{ currentPage }} of {{ totalPages }}
+</span>
+<button
+  (click)="nextPage()"
+  [disabled]="currentPage === totalPages">
+  Next
+</button>
+-------------------------------------------------------------------------
 --------------------formatpipefirstletteruppercase-----------------------
 import { Pipe, PipeTransform } from '@angular/core';
 
