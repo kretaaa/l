@@ -1,3 +1,42 @@
+-------------------real time search filter-------------------------------------------
+import { Component } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import{NgFor} from '@angular/common'
+@Component({
+  selector: 'app-real-time-search-filter',
+  imports: [FormsModule, NgFor],
+  templateUrl: './real-time-search-filter.html',
+  styleUrl: './real-time-search-filter.css',
+})
+export class RealTimeSearchFilter {
+  searchText: string = '';
+
+  users = [
+    { id: 1, name: 'Rahul', email: 'rahul@gmail.com' },
+    { id: 2, name: 'Priya', email: 'priya@gmail.com' },
+    { id: 3, name: 'Amit', email: 'amit@gmail.com' },
+    { id: 4, name: 'Natasha', email: 'natasha@gmail.com' }
+  ];
+  filteredUsers = [...this.users]; 
+  searchUsers() {
+    const search = this.searchText.toLowerCase();
+    this.filteredUsers = this.users.filter(user =>
+      user.name.toLowerCase().includes(search)
+      ||
+      user.email.toLowerCase().includes(search)     
+    );
+  }
+}
+------
+<h2>search from user list</h2>
+
+<input type="text" placeholder="type user name" [(ngModel)]="searchText" (input)="searchUsers()"/>
+<ul>
+  <li *ngFor="let item of filteredUsers">
+    {{item.name}} - {{item.email}}
+  </li>
+</ul>
+--------------------------------------------------------------------------------------
 ------------------------reusable confirmation dialog------------------------------------
 import { CommonModule } from '@angular/common';
 import { Component, Inject } from '@angular/core';
@@ -120,7 +159,80 @@ export class accesspopup {
   }
 }
 ------------------------------------------------------------------------------------------
---------------------------
+-------------------------
+--------------------------dynamic form---------------------------------------------------
+<div [formGroup]="form" (ngSubmit)="submit()">
+<input type="text" formControlName="name" placeholder="entername">
+<br>
+<input type="text" formControlName="email" placeholder="enter email">
+<br>
+<input type="text" formControlName="department"placeholder="enter department">
+<br>
+
+<div formArrayName="skills">
+    <div *ngFor="let item of skills.controls; let i = index" [formGroupName]="i">
+       <input type="text" formControlName="skillname" placeholder="enter skill"                                                                                                         >   
+       <button (click)="removeskill(i)">remove</button>    
+    </div>
+</div>
+<button (click)="addskill()">add</button>
+<button (click)="submit()">Submit</button>
+</div>
+--------
+import { Component } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FormArray, FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+
+@Component({
+  selector: 'app-login',
+  standalone:true,
+  imports: [ReactiveFormsModule,CommonModule],
+  templateUrl: './login.html',
+  styleUrl: './login.css',
+})
+export class Login {
+form! : FormGroup;
+constructor(private obj: FormBuilder){}
+
+ngOnInit(){
+  this.form = this.obj.group({
+    name:['',Validators.required],
+    email:['',Validators.required],
+    department:['',Validators.required],
+    skills:this.obj.array([
+      this.createskill()
+    ])
+  });
+}
+
+createskill(): FormGroup{
+  return this.obj.group({
+    skillname:['',Validators.required]
+  });
+}
+
+get skills():FormArray{
+  return this.form.get('skills') as FormArray;
+}
+
+addskill(){
+  this.skills.push(this.createskill());
+ }
+
+ removeskill(index : number){
+  this.skills.removeAt(index);
+ }
+
+ submit(){
+  console.log(this.form.value);
+ }
+
+ reset(){
+  this.form.reset();
+  this.skills.clear(); //array clear kra 
+  this.addskill();
+ }
+-----------------------------------------------------------------------------------------
 --------------password confirmation matching validator reactive form---------------------
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
