@@ -631,6 +631,78 @@ export class PracticeApp {
   Next
 </button>
 -------------------------------------------------------------------------
+--------------implement pagination--------------------------------------
+import { Component } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+
+@Component({
+  selector: 'practice-app',
+  standalone: true,
+  imports: [CommonModule, FormsModule],
+  templateUrl: 'practice-app.html'
+})
+export class PracticeApp {
+
+users = [
+    { id: 1, name: 'Natasha' },
+    { id: 2, name: 'Rahul' },
+    { id: 3, name: 'Amit' },
+    { id: 4, name: 'Priya' },
+    { id: 5, name: 'Ravi' },
+  ];
+  pageSize = 3;
+  currentPage = 1;
+
+  get paginatedUsers() {
+    const start = (this.currentPage - 1) * this.pageSize;
+
+    return this.users.slice(start, start + this.pageSize);
+  }
+  get totalPages() {
+    return Math.ceil(this.users.length / this.pageSize);
+  }
+  nextPage() {
+    if (this.currentPage < this.totalPages) {
+      this.currentPage++;
+    }
+  }
+  previousPage() {
+    if (this.currentPage > 1) {
+      this.currentPage--;
+    }
+  }
+}
+-----------
+<h2>User List</h2>
+
+<table border="1" cellpadding="10">
+  <tr>
+    <th>ID</th>
+    <th>Name</th>
+  </tr>
+
+  <tr *ngFor="let user of paginatedUsers">
+    <td>{{ user.id }}</td>
+    <td>{{ user.name }}</td>
+  </tr>
+
+</table>
+<br>
+<button
+  (click)="previousPage()"
+  [disabled]="currentPage === 1">
+  Previous
+</button>
+<span>
+  Page {{ currentPage }} of {{ totalPages }}
+</span>
+<button
+  (click)="nextPage()"
+  [disabled]="currentPage === totalPages">
+  Next
+</button>
+------------------------------------------------------------------------
 --------------------formatpipefirstletteruppercase-----------------------
 import { Pipe, PipeTransform } from '@angular/core';
 
