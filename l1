@@ -626,4 +626,62 @@ export const appConfig: ApplicationConfig = {
   ]
 };
 -------------------------------------------------------------------------------
+--------------------get user data api----------------------------------------
+import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+
+@Injectable({
+  providedIn: 'root',
+})
+export class GetUser {
+  constructor(private http: HttpClient){}
+
+  getUser(){
+    return this.http.get('https://jsonplaceholder.typicode.com/users')
+  }
+} //this is service
+//register this service in app.config.ts
+----------
+import { ApplicationConfig, provideBrowserGlobalErrorListeners } from '@angular/core';
+import { provideRouter } from '@angular/router';
+import { routes } from './app.routes';
+import { provideHttpClient } from '@angular/common/http';
+export const appConfig: ApplicationConfig = {
+  providers: [
+    provideHttpClient(),
+    provideBrowserGlobalErrorListeners(),
+    provideRouter(routes)
+  ]
+};
+----------
+//access api
+<h2>Users data</h2>
+
+<div *ngFor="let item of user">
+{{item.id}} : {{item.name}}
+</div>
+----------
+import { Component } from '@angular/core';
+import { GetUser } from '../../service/get-user';
+import { NgFor } from '@angular/common';
+
+@Component({
+  selector: 'getuser-demo',
+  imports: [NgFor],
+  templateUrl: './getuser-demo.html',
+  styleUrl: './getuser-demo.css',
+})
+export class GetuserDemo {
+
+user:any[]=[];
+constructor(private useapi: GetUser){}
+ngOnInit(){
+  this.useapi.getUser().subscribe((data:any)=>
+ {
+  this.user = data;
+ });
+}
+}
+------------------------------------------------------------------------------
+
 
