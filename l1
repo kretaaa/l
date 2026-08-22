@@ -1,5 +1,69 @@
+------------------todo-------------------------------------------------------------
+<h2>Todo Application</h2>
+<input
+  type="text"
+  [(ngModel)]="todoText"
+  placeholder="Enter todo">
 
+<button (click)="addTodo()">Add</button>
+<br><br>
+<button (click)="filter = 'all'">All</button>
+<button (click)="filter = 'completed'">Completed</button>
+<button (click)="filter = 'pending'">Pending</button>
+<ul>
+  <li *ngFor="let todo of filteredTodos; let i = index">
 
+    <input
+      type="checkbox"
+      [checked]="todo.completed"
+      (change)="toggleTodo(todo)">
+    {{ todo.title }}
+    <button (click)="deleteTodo(i)">Delete</button>
+  </li>
+</ul>
+--------------
+import { Component } from '@angular/core';
+import { CommonModule, NgFor } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+
+@Component({
+  selector: 'practice-app',
+  standalone: true,
+  imports: [CommonModule,FormsModule, NgFor],
+  templateUrl: 'practice-app.html'
+})
+export class PracticeApp {
+ todoText = '';
+  todos: any[] = [];
+  filter = 'all';
+  addTodo() {
+    if (this.todoText.trim() !== '') {
+
+      this.todos.push({
+        title: this.todoText,
+        completed: false
+      });
+
+      this.todoText = '';
+    }
+  }
+  deleteTodo(index: number) {
+    this.todos.splice(index, 1);
+  }
+  toggleTodo(todo: any) {
+    todo.completed = !todo.completed;
+  }
+  get filteredTodos() {
+    if (this.filter === 'completed') {
+      return this.todos.filter(todo => todo.completed);
+    }
+    if (this.filter === 'pending') {
+      return this.todos.filter(todo => !todo.completed);
+    }
+    return this.todos;
+  }
+}
+-------------------------------------------------------------------------------------
 ------------@Input() and @Output() decorators with a counter-------------------------
 import { Component, EventEmitter, Input, output, Output } from '@angular/core';
 @Component({
