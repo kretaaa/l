@@ -1,3 +1,41 @@
+--------------file upload-------------------------------------------------------
+import { Component } from '@angular/core';
+
+@Component({
+  selector: 'app-file-upload',
+  templateUrl: './file-upload.component.html'
+})
+export class FileUploadComponent {
+  selectedFile: File | null = null;
+  onFileSelected(event: any) {
+    this.selectedFile = event.target.files[0];
+  }
+  uploadFile() {
+    if (this.selectedFile) {
+      console.log(this.selectedFile);
+      alert('File uploaded: ' + this.selectedFile.name);
+    }
+  }
+}
+-----------
+<h2>File Upload</h2>
+<input type="file" (change)="onFileSelected($event)">
+<p *ngIf="selectedFile">
+  Selected File: {{ selectedFile.name }}
+</p>
+<button (click)="uploadFile()" [disabled]="!selectedFile">
+  Upload
+</button>
+-----------
+uploadFile() {
+  if (!this.selectedFile) return;
+  const formData = new FormData();
+  formData.append('file', this.selectedFile);
+  this.http.post('YOUR_API_URL', formData).subscribe(response => {
+    console.log(response);
+  });
+}
+-------------------------------------------------------------------------------
 -----------crud------------------------------------------------------------------
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
