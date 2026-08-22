@@ -1,3 +1,5 @@
+
+
 ------------@Input() and @Output() decorators with a counter-------------------------
 import { Component, EventEmitter, Input, output, Output } from '@angular/core';
 @Component({
@@ -623,7 +625,36 @@ export class FilterDepartmentPipe {
   </tbody>
 </table>
 --------------------------------------------------------------------------
+--------------currency pipe-----------------------------------------------
+import { Pipe, PipeTransform } from '@angular/core';
 
+@Pipe({
+  name: 'currencyPipe',
+})
+export class CurrencyPipePipe implements PipeTransform {
+  transform(value: number, symbol: string = '₹'): string {
+    return symbol + value.toFixed(2);
+  }
+}
+-------
+import { Component } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { CurrencyPipePipe } from './currency-pipe.pipe';
+
+@Component({
+  selector: 'app-root',
+  standalone: true,
+  imports: [FormsModule, CurrencyPipePipe],
+  templateUrl: './app.component.html'
+})
+export class AppComponent {
+price: number = 0;
+}
+--------
+<input type="number" [(ngModel)]="price">
+<h2>Price: {{ price | currencyPipe }}</h2>
+<h2>Dollar: {{ price | currencyPipe:'$' }}</h2>
+------------------------------------------------------------------------
 ---------------------Interceptorts----------------------------------------
 import { HttpErrorResponse, HttpInterceptorFn } from "@angular/common/http";
 import { catchError, throwError } from "rxjs";
