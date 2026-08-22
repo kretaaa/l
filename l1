@@ -1,3 +1,90 @@
+-----------crud------------------------------------------------------------------
+import { Component } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
+@Component({
+  selector: 'app-employee',
+  standalone: true,
+  imports: [FormsModule, CommonModule],
+  templateUrl: './employee.component.html'
+})
+export class EmployeeComponent {
+  employees = [
+    { id: 1, name: 'Rahul', salary: 25000 },
+    { id: 2, name: 'Amit', salary: 30000 }
+  ];
+  employee = {
+    id: 0,
+    name: '',
+    salary: 0
+  };
+  isEdit = false;
+  addEmployee() {
+    this.employee.id = this.employees.length + 1;
+    this.employees.push({ ...this.employee });
+
+    this.employee = { id: 0, name: '', salary: 0 };
+  }
+  editEmployee(emp: any) {
+    this.employee = { ...emp };
+    this.isEdit = true;
+  }
+  updateEmployee() {
+    const index = this.employees.findIndex(
+      e => e.id === this.employee.id
+    );
+
+    this.employees[index] = { ...this.employee };
+
+    this.employee = { id: 0, name: '', salary: 0 };
+    this.isEdit = false;
+  }
+  deleteEmployee(id: number) {
+    this.employees = this.employees.filter(
+      e => e.id !== id
+    );
+  }
+}
+---------
+<h2>Employee CRUD</h2>
+<input
+  type="text"
+  [(ngModel)]="employee.name"
+  placeholder="Employee Name">
+<input
+  type="number"
+  [(ngModel)]="employee.salary"
+  placeholder="Salary">
+<button *ngIf="!isEdit" (click)="addEmployee()">
+  Add
+</button>
+<button *ngIf="isEdit" (click)="updateEmployee()">
+  Update
+</button>
+<hr>
+<table border="1">
+  <tr>
+    <th>ID</th>
+    <th>Name</th>
+    <th>Salary</th>
+    <th>Action</th>
+  </tr>
+  <tr *ngFor="let emp of employees">
+    <td>{{ emp.id }}</td>
+    <td>{{ emp.name }}</td>
+    <td>{{ emp.salary }}</td>
+
+    <td>
+      <button (click)="editEmployee(emp)">
+        Edit
+      </button>
+      <button (click)="deleteEmployee(emp.id)">
+        Delete
+      </button>
+    </td>
+  </tr>
+</table>
+----------------------------------------------------------------------------------
 ------------------todo-------------------------------------------------------------
 <h2>Todo Application</h2>
 <input
