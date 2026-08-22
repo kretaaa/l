@@ -1,3 +1,80 @@
+---------------------file size & png------------------------------------------
+import { Component } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { CommonModule } from '@angular/common';
+@Component({
+  selector: 'app-file-upload',
+  standalone: true,
+  imports: [CommonModule],
+  templateUrl: './file-upload.component.html'
+})
+export class FileUploadComponent {
+
+  selectedFile: File | null = null;
+  errorMessage = '';
+
+  constructor(private http: HttpClient) {}
+  onFileSelected(event: any) {
+    const file = event.target.files[0];
+
+    if (!file) {
+      return;
+    }
+    if (file.type !== 'image/png' &&
+        file.type !== 'image/jpeg') {
+
+      this.errorMessage = 'Only PNG and JPEG files are allowed';
+      this.selectedFile = null;
+      return;
+    }
+    if (file.size > 2 * 1024 * 1024) {
+
+      this.errorMessage = 'File size must not exceed 2 MB';
+      this.selectedFile = null;
+      return;
+    }
+    this.errorMessage = '';
+    this.selectedFile = file;
+  }
+  uploadFile() {
+    if (!this.selectedFile) {
+      return;
+    }
+    const formData = new FormData();
+    formData.append('file', this.selectedFile);
+    this.http.post('YOUR_API_URL', formData).subscribe({
+      next: (response) => {
+        console.log(response);
+        alert('File uploaded successfully');
+      },
+      error: (error) => {
+        console.log(error);
+        alert('Upload failed');
+      }
+    });
+  }
+}
+--------
+<h2>File Upload</h2>
+<input
+  type="file"
+  accept=".png,.jpg,.jpeg"
+  (change)="onFileSelected($event)"
+>
+<br><br>
+<p *ngIf="errorMessage">
+  {{ errorMessage }}
+</p>
+
+<p *ngIf="selectedFile">
+  Selected File: {{ selectedFile.name }}
+</p>
+<button
+  (click)="uploadFile()"
+  [disabled]="!selectedFile">
+  Upload
+</button>
+-------------------------------------------------------------------------------
 --------------file upload-------------------------------------------------------
 import { Component } from '@angular/core';
 
