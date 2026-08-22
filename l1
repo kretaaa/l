@@ -1,3 +1,52 @@
+------------@Input() and @Output() decorators with a counter-------------------------
+import { Component, EventEmitter, Input, output, Output } from '@angular/core';
+@Component({
+  selector: 'app-counter',
+  imports: [],
+  templateUrl: './child-decorator.html',
+  styleUrl: './child-decorator.css',
+})
+export class ChildDecorator {
+//this is counter component
+@Input() counter: number = 0; 
+@Output() incrementEvent = new EventEmitter<void>(); 
+@Output() decrementEvent = new EventEmitter<void>(); 
+increment(){
+ this.incrementEvent.emit();  //on button click child will emit the event
+}
+decrement(){
+this.decrementEvent.emit();
+}}
+--------
+<!-- child decorator html -->
+<h2>Counter : {{counter}}</h2>
+<button (click)="increment()">Increment</button>
+<button (click)="decrement()">Decrement</button>
+---------
+import { Component } from '@angular/core';
+import { ChildDecorator } from "../child-decorator/child-decorator";
+
+@Component({
+  selector: 'app-parent-decorator',
+  imports: [ChildDecorator],
+  templateUrl: './parent-decorator.html',
+  styleUrl: './parent-decorator.css',
+})
+export class ParentDecorator {
+
+  count:number =0;
+
+  increment(){
+    this.count++;
+  }
+
+  decrement(){
+    this.count--;
+  }}
+--------
+<!-- <h1>Parent count: {{count}}</h1> -->
+<app-counter [counter]="count" (incrementEvent)="increment()" (decrementEvent)="decrement()">
+------------------------------------------------------------------------------------
 -------------------real time search filter-------------------------------------------
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
