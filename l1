@@ -120,7 +120,90 @@ export class accesspopup {
   }
 }
 ------------------------------------------------------------------------------------------
---------singupreactiveform-----------------------------------------------------------------
+--------------------------
+--------------password confirmation matching validator reactive form---------------------
+import { Component } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import {
+  FormBuilder,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+  AbstractControl,
+  ValidationErrors
+} from '@angular/forms';
+
+@Component({
+  selector: 'practice-app',
+  standalone: true,
+  imports: [CommonModule,ReactiveFormsModule],
+  templateUrl: './practice-app.html',
+  styleUrl: './practice-app.css',
+})
+export class PracticeApp {
+
+  signupForm: FormGroup;
+
+  constructor(private fb: FormBuilder) {
+
+    this.signupForm = this.fb.group(
+      {
+        password: ['', [Validators.required, Validators.minLength(6)]],
+
+        confirmPassword: ['', Validators.required]
+      },
+      {
+        validators: this.passwordMatchValidator
+      }
+    );
+  }
+
+  passwordMatchValidator(control: AbstractControl): ValidationErrors | null {
+
+    const password = control.get('password')?.value;
+    const confirmPassword = control.get('confirmPassword')?.value;
+
+    if (password !== confirmPassword) {
+      return { passwordMismatch: true };
+    }
+
+    return null;
+  }
+  submit() {
+    if (this.signupForm.valid) {
+      console.log(this.signupForm.value);
+    }
+  }
+}
+------
+<form [formGroup]="signupForm" (ngSubmit)="submit()">
+
+  <label>Password:</label>
+  <input type="password" formControlName="password">
+  
+  <br><br>
+
+  <label>Confirm Password:</label>
+  <input type="password" formControlName="confirmPassword">
+
+  <div
+    *ngIf="
+      signupForm.hasError('passwordMismatch') &&
+      signupForm.get('confirmPassword')?.touched
+    "
+  >
+    Passwords do not match
+  </div>
+
+  <br>
+
+  <button type="submit" [disabled]="signupForm.invalid">
+    Submit
+  </button>
+
+</form>
+-------------------------------------------------------------------------------------------
+--------singupreactiveform validation-----------------------------------------------------------------
 <form [formGroup]="signupForm" (ngSubmit)="submit()">
   <!-- Username -->
   <label>Username:</label>
