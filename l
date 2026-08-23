@@ -969,6 +969,34 @@ users = [
   Next
 </button>
 ------------------------------------------------------------------------
+-------------------age calculation pipe----------------------------------
+import { Pipe, PipeTransform } from '@angular/core';
+
+@Pipe({
+  name: 'ageCalculationPipe',
+})
+export class AgeCalculationPipePipe implements PipeTransform {
+    transform(dob: string): number {
+
+    const birthDate = new Date(dob);
+    const today = new Date();
+
+    let age = today.getFullYear() - birthDate.getFullYear();
+    const month = today.getMonth() - birthDate.getMonth();
+
+    if (month < 0 || 
+        (month === 0 && today.getDate() < birthDate.getDate())) {
+      age--;
+    }
+    return age;
+  }
+}
+-------
+<input type="date" [(ngModel)]="dob">
+<p>Age: {{ dob | ageCalculationPipe }} years</p>
+------
+dob = '';
+-----------------------------------------------------------------------
 --------------------formatpipefirstletteruppercase-----------------------
 import { Pipe, PipeTransform } from '@angular/core';
 
