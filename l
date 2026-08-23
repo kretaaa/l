@@ -1225,5 +1225,84 @@ ngOnInit(){
 }
 }
 ------------------------------------------------------------------------------
+---------api all----------------------------------------------------------
+import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
 
+@Injectable({
+  providedIn: 'root',
+})
+export class GetUser {
+
+  private apiUrl = 'https://jsonplaceholder.typicode.com/users';
+
+  constructor(private http: HttpClient) {}
+
+  getUser() {
+    return this.http.get(this.apiUrl);
+  }
+
+  addUser(user: any) {
+    return this.http.post(this.apiUrl, user);
+  }
+
+  updateUser(id: number, user: any) { //put
+    return this.http.put(`${this.apiUrl}/${id}`, user);
+  }
+
+  deleteUser(id: number) {
+    return this.http.delete(`${this.apiUrl}/${id}`);
+  }
+}
+-----
+import { Component } from '@angular/core';
+import { GetUser } from './get-user';
+
+@Component({
+  selector: 'app-user',
+  standalone: true,
+  templateUrl: './user.html'
+})
+export class UserComponent {
+  constructor(private userService: GetUser) {}
+  getUsers() {
+    this.userService.getUser().subscribe(data => {
+      console.log(data);
+    });
+  }
+  addUser() {
+    const user = {
+      name: 'Rahul',
+      email: 'rahul@gmail.com'
+    };
+    this.userService.addUser(user).subscribe(data => {
+      console.log(data);
+    });
+  }
+  updateUser() {
+    const user = {
+      name: 'Rahul Updated',
+      email: 'updated@gmail.com'
+    };
+
+    this.userService.updateUser(1, user).subscribe(data => {
+      console.log(data);
+    });
+  }
+  deleteUser() {
+
+    this.userService.deleteUser(1).subscribe(data => {
+      console.log(data);
+    });
+  }
+}
+-----------
+<button (click)="getUsers()">GET</button>
+
+<button (click)="addUser()">POST</button>
+
+<button (click)="updateUser()">PUT</button>
+
+<button (click)="deleteUser()">DELETE</button>
+--------------------------------------------------------------
 
