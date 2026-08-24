@@ -1,3 +1,42 @@
+--------------------checkbox--------------------------------------------
+<h2>Select Skills</h2>
+
+<label>
+  <input type="checkbox" [(ngModel)]="html">
+  HTML
+</label>
+
+<label>
+  <input type="checkbox" [(ngModel)]="css">
+  CSS
+</label>
+
+<label>
+  <input type="checkbox" [(ngModel)]="angular">
+  Angular
+</label>
+
+<p>HTML: {{ html }}</p>
+<p>CSS: {{ css }}</p>
+<p>Angular: {{ angular }}</p>
+-----
+import { Component } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+
+@Component({
+  selector: 'app-checkbox',
+  standalone: true,
+  imports: [FormsModule],
+  templateUrl: './checkbox.component.html'
+})
+export class CheckboxComponent {
+
+  html = false;
+  css = false;
+  angular = false;
+
+}
+----------------------------------------------------------------------------
 ---------------------file size & png------------------------------------------
 import { Component } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
