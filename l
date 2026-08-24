@@ -115,65 +115,85 @@ uploadFile() {
 -------------------------------------------------------------------------------
 -----------crud------------------------------------------------------------------
 import { Component } from '@angular/core';
-import { FormsModule } from '@angular/forms';
-import { CommonModule } from '@angular/common';
+import { CommonModule, NgFor } from '@angular/common';
 @Component({
-  selector: 'app-employee',
+  selector: 'practice-app',
   standalone: true,
-  imports: [FormsModule, CommonModule],
-  templateUrl: './employee.component.html'
+  imports: [CommonModule, FormsModule, NgFor],
+  templateUrl: 'practice-app.html'
 })
-export class EmployeeComponent {
-  employees = [
-    { id: 1, name: 'Rahul', salary: 25000 },
-    { id: 2, name: 'Amit', salary: 30000 }
-  ];
-  employee = {
-    id: 0,
-    name: '',
-    salary: 0
-  };
-  isEdit = false;
-  addEmployee() {
-    this.employee.id = this.employees.length + 1;
-    this.employees.push({ ...this.employee });
+export class PracticeApp {
 
-    this.employee = { id: 0, name: '', salary: 0 };
-  }
-  editEmployee(emp: any) {
-    this.employee = { ...emp };
-    this.isEdit = true;
-  }
-  updateEmployee() {
-    const index = this.employees.findIndex(
-      e => e.id === this.employee.id
-    );
+  users = [
+    { id: 1, name: 'nats', email: 'nats.com' },
+    { id: 1, name: 'shiv', email: 'shiv.com' }
+  ]
 
-    this.employees[index] = { ...this.employee };
+  name = '';
+  email = '';
+  editId: number | null = null;
 
-    this.employee = { id: 0, name: '', salary: 0 };
-    this.isEdit = false;
+  //add user 
+  addUser() {
+    const user = {
+      id: this.users.length + 1,
+      name: this.name,
+      email: this.email
+    };
+
+    this.users.push(user);
+
+    this.name = '';
+    this.email = '';
   }
-  deleteEmployee(id: number) {
-    this.employees = this.employees.filter(
-      e => e.id !== id
-    );
+
+  //delete user 
+  deleteuser(id :number){
+      this.users = this.users.filter(user => user.id !== id);
+  }
+
+  //edit user 
+  edituser(user :any){
+     this.editId = user.id,
+     this.name = user.name,
+     this.email = user.email
+  }
+
+  //update user
+  updateuser(){
+    const user = this.users.find(user => user.id === this.editId);
+
+    if(user){
+      user.name = this.name,
+      user.email = this.email
+    }
+
+    this.editId = null;
+    this.name = '';
+    this.email = '';
   }
 }
----------
-<h2>Employee CRUD</h2>
+------
+<h2>User CRUD</h2>
 <input
   type="text"
-  [(ngModel)]="employee.name"
-  placeholder="Employee Name">
+  [(ngModel)]="name"
+  placeholder="Enter name">
+
 <input
-  type="number"
-  [(ngModel)]="employee.salary"
-  placeholder="Salary">
-<button *ngIf="!isEdit" (click)="addEmployee()">
+  type="email"
+  [(ngModel)]="email"
+  placeholder="Enter email">
+
+<button
+  *ngIf="editId === null"
+  (click)="addUser()">
   Add
 </button>
-<button *ngIf="isEdit" (click)="updateEmployee()">
+
+<button
+  *ngIf="editId !== null"
+  (click)="updateuser()">
   Update
 </button>
 <hr>
@@ -181,24 +201,25 @@ export class EmployeeComponent {
   <tr>
     <th>ID</th>
     <th>Name</th>
-    <th>Salary</th>
+    <th>Email</th>
     <th>Action</th>
   </tr>
-  <tr *ngFor="let emp of employees">
-    <td>{{ emp.id }}</td>
-    <td>{{ emp.name }}</td>
-    <td>{{ emp.salary }}</td>
 
+  <tr *ngFor="let user of users">
+    <td>{{ user.id }}</td>
+    <td>{{ user.name }}</td>
+    <td>{{ user.email }}</td>
     <td>
-      <button (click)="editEmployee(emp)">
+      <button (click)="edituser(user)">
         Edit
       </button>
-      <button (click)="deleteEmployee(emp.id)">
+      <button (click)="deleteuser(user.id)">
         Delete
       </button>
     </td>
   </tr>
 </table>
+
 ----------------------------------------------------------------------------------
 ------------------todo-------------------------------------------------------------
 <h2>Todo Application</h2>
