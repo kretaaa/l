@@ -1082,7 +1082,7 @@ import { FormatUppercasePipe } from '../format-uppercase-pipe';
 export class FormatPipe {
    name: string = '';
 }
----
+------
 <h2>Title Case Pipe</h2>
 
 <input 
@@ -1176,6 +1176,38 @@ price: number = 0;
 <input type="number" [(ngModel)]="price">
 <h2>Price: {{ price | currencyPipe }}</h2>
 <h2>Dollar: {{ price | currencyPipe:'$' }}</h2>
+------------------------------------------------------------------------
+---------truncate pipe--------------------------------------------------
+import { Pipe, PipeTransform } from '@angular/core';
+
+@Pipe({
+  name: 'truncate',
+  standalone: true
+})
+export class TruncatePipe implements PipeTransform {
+
+  transform(
+    value: string,
+    limit: number = 20,
+    suffix: string = '...'
+  ): string {
+
+    if (!value) {
+      return '';
+    }
+
+    return value.length > limit
+      ? value.substring(0, limit) + suffix
+      : value;
+  }
+}
+----------ts-----
+ description: string = 'lajieajkjfkalk'
+-------
+<h2>Original Text:</h2>
+<p>{{ description }}</p>
+<h2>Truncated Text:</h2>
+<p>{{ description | truncate:10:'---' }}</p>
 ------------------------------------------------------------------------
 ---------------------Interceptorts----------------------------------------
 import { HttpErrorResponse, HttpInterceptorFn } from "@angular/common/http";
