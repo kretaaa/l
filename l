@@ -1029,6 +1029,48 @@ users = [
   Next
 </button>
 ------------------------------------------------------------------------
+------------camel case pipe --------------------------------------------
+@Pipe({ 
+name: 'camelCase', 
+standalone: true 
+}) 
+export class CamelCasePipe implements PipeTransform { 
+transform(value: string): string { 
+if(!value) return ''; 
+return value 
+.toLowerCase() 
+.split(' ') 
+.map((word, index) => index === 0 ? word : word[0].toUpperCase() + 
+word.slice(1)) 
+.join(''); 
+} 
+} 
+-----------------------
+<div> 
+<p>{{"angular is  s p a framework" | camelCase}}</p> 
+</div>
+-----------------------------------------------------------------------
+-------------------Phone Format pipe----------------------------------
+@Pipe({ 
+  name: 'phoneFormat', 
+  standalone: true 
+}) 
+export class PhoneFormatPipe implements PipeTransform { 
+    transform(value: string): string { 
+      const cleaned = value.replace(/\D/g, ''); 
+      const match = cleaned.match(/^(\d{3})(\d{3})(\d{4})$/); 
+      return match ? `(${match[1]}) ${match[2]} ${match[3]}` : value; 
+  } 
+} 
+---------------
+Html 
+<div> 
+    <p>{{phone | phoneFormat}}</p> 
+</div> 
+ 
+Ts 
+  phone = '9098539703';
+------------------------------------------------------------------------
 -------------------age calculation pipe----------------------------------
 import { Pipe, PipeTransform } from '@angular/core';
 
